@@ -1,4 +1,5 @@
 #%%
+# some libraries that are useful
 from celluloid import Camera
 from matplotlib import pyplot as plt
 import numpy as np
@@ -6,7 +7,7 @@ from qiskit import QuantumCircuit, execute, Aer
 from qiskit.visualization import plot_histogram, plot_bloch_vector
 from math import sqrt, pi
 
-
+# returns array of people who are infected given data from random simulation
 def infected(peeps):
     sz = int(np.sum(peeps[4,:]))
     inf = np.zeros([5,sz])
@@ -15,6 +16,7 @@ def infected(peeps):
         inf[:,i] = peeps[:,ind[0][i]]
     return inf
 
+# runs a quantum circuit and randomly returns infection value based on probability of infection
 def qc_check(p):
     qc = QuantumCircuit(1,1)
     theta = 2*np.arcsin(sqrt(p))
@@ -26,12 +28,16 @@ def qc_check(p):
 
     return(int(list(counts.keys())[0]))
 # %%
+# number of people simulated in the random experiemnt
 pn=150
 fig = plt.figure()
 camera = Camera(fig)
 
+# rows 1-2 of loc represent positions of people, rows 3-4 represent current velocities, 
+# row 5 is whether infected
 loc = (np.random.rand(5, pn) - 1/2)
 loc[4,:] = 0
+# patient zero! 
 loc[4, 6] = 1
 loc[[2,3],:] = loc[[2,3],:]/100
 for i in range(50):
@@ -42,7 +48,7 @@ for i in range(50):
         #plotting
         col = 'black'
         if loc[4,j] == 1: col = 'red'
-        plt.plot(loc[0,j], loc[1,j], '.' ,color = col)
+        plt.plot(loc[0,j], loc[1,j], '.' ,color = col, label=col) # new line added here
 
         #check for infection
         minDist = 10
@@ -51,6 +57,8 @@ for i in range(50):
                 dist = np.linalg.norm(loc[[0,1],j]-inf[[0,1],k])
                 if dist < minDist: minDist = dist
             
+            # returns random infection value (0 = not infected, 1 = infected) 
+            # if close enough to someone infected
             if minDist < 0.05:
                 loc[4,j] = qc_check(0.1)
 
@@ -66,5 +74,10 @@ for i in range(50):
     loc[[2,3],:] = loc[[2,3],:] + mov
     loc[[0,1],:] = loc[[2,3],:] + loc[[0,1],:]
 
+# formatting plot
+plt.xlabel("x-coordinate location")
+plt.ylabel("y-coordinate location")
+plt.title("Simulated Spread of COVID-19 Via Random Movement")
+plt.legend()
 animation = camera.animate()
 animation.save('my_animation.gif')
