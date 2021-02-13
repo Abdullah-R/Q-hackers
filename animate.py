@@ -30,7 +30,12 @@ def qc_check(p):
 # %%
 # number of people simulated in the random experiemnt
 pn=150
+
+#Plot and camera setup
 fig = plt.figure()
+plt.title("Simulated Spread of COVID-19 Via Random Movement")
+plt.xlabel("x-coordinate location")
+plt.ylabel("y-coordinate location")
 camera = Camera(fig)
 
 # rows 1-2 of loc represent positions of people, rows 3-4 represent current velocities, 
@@ -48,7 +53,7 @@ for i in range(50):
         #plotting
         col = 'black'
         if loc[4,j] == 1: col = 'red'
-        plt.plot(loc[0,j], loc[1,j], '.' ,color = col, label=col) # new line added here
+        plt.plot(loc[0,j], loc[1,j], '.' ,color = col) # new line added here
 
         #check for infection
         minDist = 10
@@ -74,10 +79,5 @@ for i in range(50):
     loc[[2,3],:] = loc[[2,3],:] + mov
     loc[[0,1],:] = loc[[2,3],:] + loc[[0,1],:]
 
-# formatting plot
-plt.xlabel("x-coordinate location")
-plt.ylabel("y-coordinate location")
-plt.title("Simulated Spread of COVID-19 Via Random Movement")
-plt.legend()
 animation = camera.animate()
 animation.save('my_animation.gif')
