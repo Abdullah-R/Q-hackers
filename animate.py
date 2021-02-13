@@ -68,24 +68,3 @@ for i in range(50):
 
 animation = camera.animate()
 animation.save('my_animation.gif')
-
-
-
-# # %%
-# loc = (np.random.rand(5, 50) - 1/2)
-# loc[4,:] = 0
-# loc[4, [6,45,12,41,24,47,26]] = 1
-# loc[[2,3],:] = loc[[2,3],:]/100
-
-# def infected(peeps):
-#     sz = int(np.sum(peeps[4,:]))
-#     inf = np.zeros([5,sz])
-#     ind = np.where(peeps[4,:]==1)
-#     for i in range(sz):
-#         inf[:,i] = peeps[:,ind[0][i]]
-#     return inf
-
-# inf = infected(loc)
-# print(inf)
-
-# %%
